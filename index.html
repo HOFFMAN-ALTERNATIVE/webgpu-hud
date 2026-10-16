@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" data-motion="full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#02040a" />
+    <meta name="description" content="Volumetric cyberpunk tactical HUD rendered with Three.js WebGPURenderer and TSL node materials, with automatic WebGL 2 fallback." />
+    <title>HX-7 // Tactical HUD — WebGPU</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='%2319f0ff' stroke-width='2'/%3E%3Cpath d='M16 16 L16 3' stroke='%233dffc5' stroke-width='2'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <canvas id="gl" aria-label="3D tactical radar, holographic core and particle field"></canvas>
+    <div class="fx-scan" aria-hidden="true"></div>
+
+    <header class="topbar panel" role="banner">
+      <div class="brand"><span class="glyph" aria-hidden="true">◢◤</span> HX-7 <em>// TACTICAL HUD</em></div>
+      <div class="status">
+        <span class="pill" id="backend" data-testid="backend">INITIALISING</span>
+        <span class="pill"><span class="dot" aria-hidden="true"></span> LINK STABLE</span>
+        <span class="pill mono" id="fps">— FPS</span>
+        <span class="pill mono" id="clock" data-testid="clock">T+00:00:00.00</span>
+      </div>
+    </header>
+
+    <main class="hud" aria-live="off">
+      <section class="panel left" aria-labelledby="tm-title">
+        <h2 id="tm-title"><span>SYSTEM TELEMETRY</span><small>OU-STREAM · 30 Hz</small></h2>
+        <ul id="telemetry-list" class="telemetry"></ul>
+      </section>
+
+      <section class="panel right" aria-labelledby="ct-title">
+        <h2 id="ct-title"><span>RADAR CONTACTS</span><small>SWEEP <b id="sweep-bearing" class="mono">000°</b></small></h2>
+        <div class="threat">
+          <svg viewBox="0 0 120 120" role="img" aria-labelledby="threat-label">
+            <circle class="track" cx="60" cy="60" r="48" />
+            <circle id="threat-arc" class="arc" cx="60" cy="60" r="48" />
+          </svg>
+          <div class="threat-read">
+            <span class="k">THREAT INDEX</span>
+            <span id="threat-value" class="v mono" data-testid="threat">0%</span>
+            <span id="threat-label" class="lvl">NOMINAL</span>
+          </div>
+        </div>
+        <table id="contacts" class="contacts">
+          <thead><tr><th>ID</th><th>CLASS</th><th>BRG</th><th>RNG km</th><th>km/h</th><th>SIG</th></tr></thead>
+          <tbody data-testid="contacts"></tbody>
+        </table>
+      </section>
+
+      <section class="panel bottom" aria-labelledby="ev-title">
+        <h2 id="ev-title"><span>EVENT STREAM</span><small>POISSON λ=0.12/s</small></h2>
+        <ol id="event-log" class="events" data-testid="events"><li class="ev ev-info"><time>T+00:00:00.00</time><b>SYS-000</b><span>Telemetry uplink established</span></li></ol>
+      </section>
+
+      <nav class="controls" aria-label="HUD controls">
+        <button id="motion-toggle" type="button" aria-pressed="false">MOTION · FULL</button>
+        <button id="pause-toggle" type="button" aria-pressed="false">PAUSE</button>
+      </nav>
+    </main>
+
+    <div class="nogpu panel" role="alert">GPU UNAVAILABLE — this demo needs WebGPU or WebGL 2.</div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
