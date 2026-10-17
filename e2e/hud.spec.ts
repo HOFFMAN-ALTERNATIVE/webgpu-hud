@@ -15,6 +15,10 @@ const hud = (page: Page) => page.evaluate(() => (window as unknown as { __HUD__:
 async function open(page: Page, query = '') {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
+  // CSP violations are console errors, not exceptions; fail on them too.
+  page.on('console', (m) => {
+    if (m.type() === 'error' && /Content Security Policy/i.test(m.text())) errors.push(m.text());
+  });
   await page.goto(`./${query}`);
   await page.waitForFunction(() => (window as unknown as { __HUD__?: Hud }).__HUD__?.ready === true, null, { timeout: 45_000 });
   return errors;
